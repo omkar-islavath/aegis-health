@@ -9,6 +9,12 @@ const initDatabase = async () => {
     return;
   }
 
+  // Skip database auto-creation on cloud hosting (Render/Supabase)
+  if (databaseUrl.includes('render.com') || databaseUrl.includes('supabase') || process.env.NODE_ENV === 'production') {
+    console.log('Cloud database environment detected. Skipping auto-creation verification.');
+    return;
+  }
+
   // Parse database name from URL (e.g. postgres://user:pass@host:port/database_name)
   const urlParts = databaseUrl.split('/');
   const dbName = urlParts[urlParts.length - 1].split('?')[0];
