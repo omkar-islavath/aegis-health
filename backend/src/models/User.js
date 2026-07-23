@@ -34,14 +34,6 @@ const User = sequelize.define('User', {
   gender: {
     type: DataTypes.STRING,
     allowNull: false
-  },
-  resetOtp: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  resetOtpExpires: {
-    type: DataTypes.DATE,
-    allowNull: true
   }
 });
 

@@ -92,11 +92,11 @@ const profile = async (req, res, next) => {
   }
 };
 
-const forgotPassword = async (req, res, next) => {
+const resetPassword = async (req, res, next) => {
   try {
-    const { email } = req.body;
-    if (!email) {
-      return res.status(400).json({ error: 'Email address is required.' });
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+      return res.status(400).json({ error: 'Email and new password are required.' });
     }
 
     const user = await User.findOne({ where: { email } });
@@ -104,46 +104,11 @@ const forgotPassword = async (req, res, next) => {
       return res.status(404).json({ error: 'No user account found with that email address.' });
     }
 
-    // Generate a 6-digit OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes validity
-
-    user.resetOtp = otp;
-    user.resetOtpExpires = expires;
-    await user.save();
-
-    console.log('\n=========================================');
-    console.log(`[SMTP DEV FALLBACK] PASSWORD RESET CODE`);
-    console.log(`Email: ${email}`);
-    console.log(`Verification OTP: ${otp}`);
-    console.log(`Expires: ${expires.toLocaleTimeString()}`);
-    console.log('=========================================\n');
-
-    res.json({ message: 'Reset OTP has been generated successfully. Check server logs!' });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const resetPassword = async (req, res, next) => {
-  try {
-    const { email, otp, newPassword } = req.body;
-    if (!email || !otp || !newPassword) {
-      return res.status(400).json({ error: 'All fields are required.' });
-    }
-
-    const user = await User.findOne({ where: { email } });
-    if (!user || user.resetOtp !== otp || new Date() > new Date(user.resetOtpExpires)) {
-      return res.status(400).json({ error: 'Invalid or expired OTP code.' });
-    }
-
     // Hash the new password
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(newPassword, salt);
 
     user.passwordHash = passwordHash;
-    user.resetOtp = null;
-    user.resetOtpExpires = null;
     await user.save();
 
     res.json({ message: 'Password has been reset successfully. Please log in.' });
@@ -156,6 +121,5 @@ module.exports = {
   register,
   login,
   profile,
-  forgotPassword,
   resetPassword
 };
