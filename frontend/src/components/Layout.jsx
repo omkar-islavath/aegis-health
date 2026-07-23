@@ -14,7 +14,9 @@ import {
   Moon,
   User as UserIcon,
   Check,
-  BookOpen
+  BookOpen,
+  Menu,
+  X
 } from 'lucide-react';
 
 const Layout = ({ children }) => {
@@ -24,6 +26,25 @@ const Layout = ({ children }) => {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
   const [notifications, setNotifications] = useState([]);
   const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // Track window resize for responsive layout adjustments
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      if (window.innerWidth > 900) {
+        setIsMobileOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close mobile drawer on route change
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [location.pathname]);
 
   // Apply Theme
   useEffect(() => {
@@ -48,7 +69,6 @@ const Layout = ({ children }) => {
   useEffect(() => {
     if (user) {
       fetchNotifications();
-      // Poll notifications every 30 seconds
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
     }
@@ -99,15 +119,36 @@ const Layout = ({ children }) => {
     { name: 'Rules Engine (Admin)', path: '/rules-editor', icon: Settings },
   ];
 
+  const isMobile = windowWidth <= 900;
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar - Desktop */}
+    <div style={{ display: 'flex', minHeight: '100vh', position: 'relative' }}>
+      
+      {/* Mobile Backdrop Overlay */}
+      {isMobile && isMobileOpen && (
+        <div 
+          onClick={() => setIsMobileOpen(false)}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 90
+          }}
+          className="no-print"
+        />
+      )}
+
+      {/* Sidebar Navigation */}
       <aside style={{
         width: '280px',
         backgroundColor: 'var(--bg-card)',
         backdropFilter: 'blur(16px)',
         borderRight: '1px solid var(--border-color)',
-        padding: '30px 20px',
+        padding: '24px 20px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -115,26 +156,46 @@ const Layout = ({ children }) => {
         top: 0,
         bottom: 0,
         left: 0,
-        zIndex: 50
+        zIndex: 100,
+        transform: isMobile ? (isMobileOpen ? 'translateX(0)' : 'translateX(-100%)') : 'none',
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        boxShadow: isMobile && isMobileOpen ? 'var(--shadow-lg)' : 'none'
       }} className="no-print">
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '40px' }}>
-            <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--text-inverse)',
-              fontWeight: 'bold',
-              fontSize: '20px'
-            }}>🩺</div>
-            <div>
-              <h2 style={{ fontSize: '18px', fontWeight: '800', fontFamily: 'var(--font-display)' }}>AEGIS HEALTH</h2>
-              <p style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600' }}>TRIAGE & MONITORING</p>
+          {/* Sidebar Header & Close Icon for Mobile */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                background: 'linear-gradient(135deg, var(--color-primary), var(--color-accent))',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'var(--text-inverse)',
+                fontWeight: 'bold',
+                fontSize: '20px'
+              }}>🩺</div>
+              <div>
+                <h2 style={{ fontSize: '18px', fontWeight: '800', fontFamily: 'var(--font-display)' }}>AEGIS HEALTH</h2>
+                <p style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '600' }}>TRIAGE & MONITORING</p>
+              </div>
             </div>
+            {isMobile && (
+              <button 
+                onClick={() => setIsMobileOpen(false)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '4px'
+                }}
+              >
+                <X size={22} />
+              </button>
+            )}
           </div>
 
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -181,7 +242,8 @@ const Layout = ({ children }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'white'
+              color: 'white',
+              flexShrink: 0
             }}><UserIcon size={16} /></div>
             <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
               <p style={{ fontSize: '13px', fontWeight: '600' }}>{user?.firstName} {user?.lastName}</p>
@@ -193,7 +255,8 @@ const Layout = ({ children }) => {
             width: '100%',
             display: 'flex',
             alignItems: 'center',
-            gap: '14px',
+            justifyContent: 'center',
+            gap: '12px',
             padding: '12px 16px',
             borderRadius: 'var(--radius-sm)',
             border: '1px solid var(--border-color)',
@@ -210,15 +273,16 @@ const Layout = ({ children }) => {
         </div>
       </aside>
 
-      {/* Main Panel */}
+      {/* Main Container */}
       <div style={{
         flex: 1,
-        marginLeft: '280px',
+        marginLeft: isMobile ? 0 : '280px',
         minHeight: '100vh',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        width: isMobile ? '100%' : 'calc(100% - 280px)'
       }}>
-        {/* Header */}
+        {/* Header Bar */}
         <header style={{
           height: '70px',
           borderBottom: '1px solid var(--border-color)',
@@ -227,18 +291,36 @@ const Layout = ({ children }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 40px',
+          padding: isMobile ? '0 16px' : '0 32px',
           position: 'sticky',
           top: 0,
           zIndex: 40
         }} className="no-print">
-          <div>
-            <h1 style={{ fontSize: '20px', fontWeight: '800' }}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {isMobile && (
+              <button 
+                onClick={() => setIsMobileOpen(true)}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--text-main)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '6px'
+                }}
+              >
+                <Menu size={22} />
+              </button>
+            )}
+            <h1 style={{ fontSize: isMobile ? '16px' : '20px', fontWeight: '800' }}>
               {menuItems.find(item => item.path === location.pathname)?.name || 'Health Portal'}
             </h1>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '16px' }}>
             {/* Theme Toggle */}
             <button onClick={toggleTheme} style={{
               background: 'transparent',
@@ -248,12 +330,12 @@ const Layout = ({ children }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '40px',
-              height: '40px',
+              width: '38px',
+              height: '38px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(255,255,255,0.03)'
+              backgroundColor: 'rgba(255,255,255,0.04)'
             }} className="theme-toggle">
-              {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
             </button>
 
             {/* Notification Bell */}
@@ -266,24 +348,24 @@ const Layout = ({ children }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: '40px',
-                height: '40px',
+                width: '38px',
+                height: '38px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255,255,255,0.03)',
+                backgroundColor: 'rgba(255,255,255,0.04)',
                 position: 'relative'
               }} className="notif-toggle">
-                <Bell size={20} />
+                <Bell size={18} />
                 {unreadCount > 0 && (
                   <span style={{
                     position: 'absolute',
-                    top: '8px',
-                    right: '8px',
-                    width: '18px',
-                    height: '18px',
+                    top: '6px',
+                    right: '6px',
+                    width: '16px',
+                    height: '16px',
                     borderRadius: '50%',
                     backgroundColor: 'var(--color-risk-high)',
                     color: 'white',
-                    fontSize: '10px',
+                    fontSize: '9px',
                     fontWeight: 'bold',
                     display: 'flex',
                     alignItems: 'center',
@@ -295,25 +377,25 @@ const Layout = ({ children }) => {
               {showNotifDropdown && (
                 <div style={{
                   position: 'absolute',
-                  top: '50px',
+                  top: '46px',
                   right: 0,
-                  width: '320px',
+                  width: isMobile ? '280px' : '320px',
                   backgroundColor: 'var(--bg-main)',
                   border: '1px solid var(--border-color)',
                   borderRadius: 'var(--radius-md)',
                   boxShadow: 'var(--shadow-lg)',
                   zIndex: 100,
-                  maxHeight: '400px',
+                  maxHeight: '380px',
                   overflowY: 'auto'
                 }}>
                   <div style={{
-                    padding: '16px',
+                    padding: '14px 16px',
                     borderBottom: '1px solid var(--border-color)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <h4 style={{ fontWeight: '700', fontSize: '14px' }}>Notifications</h4>
+                    <h4 style={{ fontWeight: '700', fontSize: '13px' }}>Notifications</h4>
                     {unreadCount > 0 && (
                       <button onClick={markAllRead} style={{
                         background: 'transparent',
@@ -371,7 +453,12 @@ const Layout = ({ children }) => {
         </header>
 
         {/* Content Area */}
-        <main style={{ flex: 1, padding: '40px', overflowY: 'auto' }} className="print-page">
+        <main style={{
+          flex: 1,
+          padding: isMobile ? '20px 16px' : '32px 40px',
+          overflowY: 'auto',
+          maxWidth: '100%'
+        }} className="print-page">
           {children}
         </main>
       </div>

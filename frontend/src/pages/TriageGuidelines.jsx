@@ -62,7 +62,7 @@ const TriageGuidelines = () => {
       </div>
 
       {/* Header & Search Bar Row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '20px' }} className="grid-responsive">
+      <div className="responsive-flex-header">
         <div>
           <h2 style={{ fontSize: '20px', fontWeight: '800', fontFamily: 'var(--font-display)', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <BookOpen style={{ color: 'var(--color-primary)' }} />
@@ -108,7 +108,7 @@ const TriageGuidelines = () => {
       ) : (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
           gap: '20px'
         }}>
           {displayRules.map(rule => (

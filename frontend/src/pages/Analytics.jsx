@@ -93,7 +93,7 @@ const Analytics = () => {
           </div>
 
           {/* Grid for distributions */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+          <div className="responsive-grid-2col">
             
             {/* Symptom Frequency */}
             <div className="glass-panel" style={{ height: '340px' }}>

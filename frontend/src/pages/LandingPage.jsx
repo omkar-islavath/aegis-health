@@ -18,14 +18,15 @@ const LandingPage = () => {
     }}>
       {/* Navbar */}
       <header style={{
-        padding: '20px 80px',
+        padding: '16px 24px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         borderBottom: '1px solid var(--border-color)',
         backdropFilter: 'blur(10px)',
         position: 'sticky',
-        top: 0
+        top: 0,
+        zIndex: 50
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
@@ -45,14 +46,14 @@ const LandingPage = () => {
             <p style={{ fontSize: '10px', color: 'var(--text-muted)', fontWeight: '600' }}>TRIAGE & CLINICAL DECISION ENGINE</p>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '15px' }}>
-          <Link to="/login" className="btn-secondary" style={{ textDecoration: 'none' }}>Log In</Link>
-          <Link to="/register" className="btn-primary" style={{ textDecoration: 'none' }}>Register</Link>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <Link to="/login" className="btn-secondary" style={{ textDecoration: 'none', padding: '8px 16px', fontSize: '13px' }}>Log In</Link>
+          <Link to="/register" className="btn-primary" style={{ textDecoration: 'none', padding: '8px 16px', fontSize: '13px' }}>Register</Link>
         </div>
       </header>
 
       {/* Hero Section */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '60px 20px', textAlign: 'center', maxWidth: '900px', margin: '0 auto' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', textAlign: 'center', maxWidth: '900px', margin: '0 auto', width: '100%' }}>
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
@@ -71,8 +72,8 @@ const LandingPage = () => {
         </div>
 
         <h1 style={{
-          fontSize: '54px',
-          lineHeight: '1.1',
+          fontSize: 'clamp(28px, 6vw, 54px)',
+          lineHeight: '1.15',
           marginBottom: '20px',
           background: 'linear-gradient(to right, #ffffff, var(--color-primary-light))',
           WebkitBackgroundClip: 'text',

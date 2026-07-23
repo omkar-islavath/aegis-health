@@ -57,7 +57,7 @@ const Register = () => {
           <span>Back to Home</span>
         </Link>
 
-        <div className="glass-panel" style={{ padding: '40px' }}>
+        <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
             <div style={{
               width: '48px',
@@ -90,7 +90,7 @@ const Register = () => {
           )}
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="responsive-grid-2col">
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <label style={{ fontSize: '12px', fontWeight: '700', color: 'var(--text-muted)', textTransform: 'uppercase' }}>First Name</label>
                 <div style={{ position: 'relative' }}>

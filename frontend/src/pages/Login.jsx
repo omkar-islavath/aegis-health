@@ -53,7 +53,7 @@ const Login = () => {
           <span>Back to Home</span>
         </Link>
 
-        <div className="glass-panel" style={{ padding: '40px' }}>
+        <div className="glass-panel" style={{ padding: '24px' }}>
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
             <div style={{
               width: '48px',
@@ -115,6 +115,11 @@ const Login = () => {
                   placeholder="••••••••"
                   style={{ paddingLeft: '48px' }}
                 />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '2px' }}>
+                <Link to="/forgot-password" style={{ color: 'var(--text-muted)', fontSize: '11px', fontWeight: '600', textDecoration: 'none' }} className="hover:text-white">
+                  Forgot Password?
+                </Link>
               </div>
             </div>
 

@@ -109,26 +109,28 @@ const RulesEditor = () => {
         <strong style={{ color: 'var(--color-primary-light)' }}>🔐 Developer Admin Panel:</strong> This section simulates the healthcare administrator console. Adding, toggling, or deleting rules here directly modifies the guidelines stored in the PostgreSQL database, dynamically changing the risk evaluations and GP recommendations for all patient logs in real-time.
       </div>
 
-      <div style={{ display: 'flex', gap: '15px', alignItems: 'center' }}>
-        <p style={{ fontSize: '14px', color: 'var(--text-muted)', flex: 1 }}>
+      <div className="responsive-flex-header" style={{ flexWrap: 'wrap' }}>
+        <p style={{ fontSize: '14px', color: 'var(--text-muted)', flex: '1 1 200px' }}>
           Manage diagnostic triage rules directly in the database. Active rules guide automated patient risk assessments.
         </p>
-        <input 
-          type="text" 
-          placeholder="Search rules..." 
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="input-field"
-          style={{ width: '220px', padding: '10px 14px', background: 'rgba(0,0,0,0.2)', margin: 0 }}
-        />
-        <button onClick={() => setShowModal(true)} className="btn-primary">
-          <Plus size={16} />
-          <span>Add Triage Rule</span>
-        </button>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', width: '100%', maxWidth: '400px', flexWrap: 'wrap' }}>
+          <input 
+            type="text" 
+            placeholder="Search rules..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="input-field"
+            style={{ flex: 1, padding: '10px 14px', background: 'rgba(0,0,0,0.2)', margin: 0, minWidth: '150px' }}
+          />
+          <button onClick={() => setShowModal(true)} className="btn-primary" style={{ flexShrink: 0 }}>
+            <Plus size={16} />
+            <span>Add Triage Rule</span>
+          </button>
+        </div>
       </div>
 
-      <div className="glass-panel" style={{ overflowX: 'auto', padding: 0 }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+      <div className="glass-panel table-container" style={{ padding: 0 }}>
+        <table style={{ width: '100%', minWidth: '700px', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border-color)', backgroundColor: 'rgba(0,0,0,0.1)' }}>
               <th style={{ padding: '15px 20px', textAlign: 'left', fontWeight: '700', color: 'var(--text-muted)' }}>Symptom</th>
@@ -200,28 +202,8 @@ const RulesEditor = () => {
 
       {/* Add Rule Modal Overlay */}
       {showModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-          padding: '20px'
-        }}>
-          <div className="glass-panel" style={{
-            width: '100%',
-            maxWidth: '520px',
-            backgroundColor: 'var(--bg-main)',
-            position: 'relative',
-            maxHeight: '90vh',
-            overflowY: 'auto'
-          }}>
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setShowModal(false)} style={{
               position: 'absolute',
               top: '20px',

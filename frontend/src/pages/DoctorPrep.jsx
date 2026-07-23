@@ -115,7 +115,7 @@ const DoctorPrep = () => {
   };
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 2fr', gap: '30px' }} className="grid-responsive">
+    <div className="responsive-grid-split">
       
       {/* Left Column: Generate Card & History */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }} className="no-print">

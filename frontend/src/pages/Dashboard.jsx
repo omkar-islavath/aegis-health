@@ -136,7 +136,7 @@ const Dashboard = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
       
       {/* Top Section - Risk Assessment Card */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '30px' }}>
+      <div className="responsive-grid-split">
         
         {/* Risk Level Banner */}
         <div className="glass-panel" style={{
@@ -261,7 +261,7 @@ const Dashboard = () => {
       </div>
 
       {/* Logs & Medicines Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1.2fr', gap: '30px' }}>
+      <div className="responsive-grid-split">
         
         {/* Recent logs with Triage explaining why */}
         <div className="glass-panel">
@@ -380,28 +380,8 @@ const Dashboard = () => {
       
       {/* 1. Log Symptom Modal Overlay */}
       {symptomModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-          padding: '20px'
-        }}>
-          <div className="glass-panel" style={{
-            width: '100%',
-            maxWidth: '500px',
-            backgroundColor: 'var(--bg-main)',
-            position: 'relative',
-            maxHeight: '90vh',
-            overflowY: 'auto'
-          }}>
+        <div className="modal-overlay" onClick={() => setSymptomModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setSymptomModal(false)} style={{
               position: 'absolute',
               top: '20px',
@@ -525,28 +505,8 @@ const Dashboard = () => {
 
       {/* 2. Log Medicine Modal Overlay */}
       {medicineModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-          padding: '20px'
-        }}>
-          <div className="glass-panel" style={{
-            width: '100%',
-            maxWidth: '500px',
-            backgroundColor: 'var(--bg-main)',
-            position: 'relative',
-            maxHeight: '90vh',
-            overflowY: 'auto'
-          }}>
+        <div className="modal-overlay" onClick={() => setMedicineModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setMedicineModal(false)} style={{
               position: 'absolute',
               top: '20px',

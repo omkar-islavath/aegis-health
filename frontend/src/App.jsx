@@ -13,6 +13,7 @@ import Analytics from './pages/Analytics';
 import DoctorPrep from './pages/DoctorPrep';
 import RulesEditor from './pages/RulesEditor';
 import TriageGuidelines from './pages/TriageGuidelines';
+import ForgotPassword from './pages/ForgotPassword';
 
 const ProtectedRoute = ({ children }) => {
   const { token, loading } = useAuth();
@@ -44,6 +45,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         
         {/* Protected Portal Routes */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
